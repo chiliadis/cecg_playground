@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1>Simple Test Page</h1>
+    <button onclick="simpleTest()">Simple Test Button</button>
+    <div id="result"></div>
+
+    <script>
+        console.log('Simple script loaded');
+
+        function simpleTest() {
+            console.log('Simple test function called');
+            document.getElementById('result').innerHTML = 'SUCCESS: JavaScript is working!';
+            alert('Simple test works!');
+        }
+
+        // Make it global
+        window.simpleTest = simpleTest;
+
+        console.log('Simple script finished loading');
+    </script>
+</body>
+</html>

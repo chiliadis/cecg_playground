@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chubb Insurance Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-testid="main-body">
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>🏢 CECG Testing Playground</h1>
+                <p>Please log in to access the testing portal</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="login-password" name="password" required autocomplete="current-password">
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password')" aria-label="Show password">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="login-submit-btn">Login</button>
+            </form>
+            <div class="login-help">
+                <h3>Sample Login Credentials:</h3>
+                <div class="credentials-list">
+                    <div class="credential-item">
+                        <strong>Wizard McSpellcaster</strong><br>
+                        Email: wizard.mcspellcaster@email.com<br>
+                        Password: password123
+                    </div>
+                    <div class="credential-item">
+                        <strong>Captain Awesome</strong><br>
+                        Email: captain.awesome@email.com<br>
+                        Password: secure456
+                    </div>
+                    <div class="credential-item">
+                        <strong>Princess Sparkles</strong><br>
+                        Email: princess.sparkles@email.com<br>
+                        Password: pass2023
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until logged in) -->
+    <div id="main-app" class="main-app" style="display: none;">
+    <header class="site-header" data-section="header">
+        <div class="header-content">
+            <h1 id="main-title" data-testid="page-title">🏢 CECG Testing Portal</h1>
+            <p class="tagline" data-role="subtitle">Comprehensive Insurance Testing Environment</p>
+            <div class="user-info" data-feature="user-status">
+                <span id="user-status">Not logged in</span>
+                <button id="login-btn" class="login-button">Login</button>
+                <button id="logout-btn" class="logout-button" style="display: none;">Logout</button>
+                <button id="reset-btn" class="reset-button" onclick="resetDatabase()" title="Reset database to fresh test data">🔄 Reset Data</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-navigation" aria-label="Main navigation">
+        <ul class="nav-list" data-component="main-nav">
+            <li><a href="#dashboard" class="nav-link active" data-tab="dashboard">Dashboard</a></li>
+            <li><a href="#customers" class="nav-link" data-tab="customers">Customers</a></li>
+            <li><a href="#brokers" class="nav-link" data-tab="brokers">Brokers</a></li>
+            <li><a href="#policies" class="nav-link" data-tab="policies">Policies</a></li>
+            <li><a href="#claims" class="nav-link" data-tab="claims">Claims</a></li>
+            <li><a href="#quotes" class="nav-link" data-tab="quotes">Get Quote</a></li>
+        </ul>
+    </nav>
+
+    <main role="main" class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="dashboard active-tab" data-section="dashboard">
+            <h2 data-testid="dashboard-title">System Overview Dashboard</h2>
+
+            <div class="dashboard-metrics">
+                <div class="metrics-grid">
+                    <div class="metric-card total-customers" data-testid="total-customers">
+                        <div class="metric-header">
+                            <h3 class="metric-title">👥 Total Customers</h3>
+                            <span class="metric-value" id="total-customers-count">0</span>
+                        </div>
+                        <div class="metric-details">
+                            <div class="metric-breakdown">
+                                <span class="breakdown-item">Active: <span id="active-customers">0</span></span>
+                                <span class="breakdown-item">Pending: <span id="pending-customers">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card total-policies" data-testid="total-policies">
+                        <div class="metric-header">
+                            <h3 class="metric-title">📋 Total Policies</h3>
+                            <span class="metric-value" id="total-policies-count">0</span>
+                        </div>
+                        <div class="metric-details">
+                            <div class="metric-breakdown">
+                                <span class="breakdown-item">Active: <span id="active-policies">0</span></span>
+                                <span class="breakdown-item">Pending: <span id="pending-policies">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card total-claims" data-testid="total-claims">
+                        <div class="metric-header">
+                            <h3 class="metric-title">🔍 Total Claims</h3>
+                            <span class="metric-value" id="total-claims-count">0</span>
+                        </div>
+                        <div class="metric-details">
+                            <div class="metric-breakdown">
+                                <span class="breakdown-item">Open: <span id="open-claims">0</span></span>
+                                <span class="breakdown-item">Closed: <span id="closed-claims">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card total-brokers" data-testid="total-brokers">
+                        <div class="metric-header">
+                            <h3 class="metric-title">🏢 Total Brokers</h3>
+                            <span class="metric-value" id="total-brokers-count">0</span>
+                        </div>
+                        <div class="metric-details">
+                            <div class="metric-breakdown">
+                                <span class="breakdown-item">Licensed: <span id="licensed-brokers">0</span></span>
+                                <span class="breakdown-item">Specializations: <span id="broker-specializations">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-container policy-distribution">
+                        <h4>Policy Distribution by Type</h4>
+                        <div class="chart-placeholder" id="policy-chart">
+                            <div class="chart-item">
+                                <span class="chart-label">Auto Insurance</span>
+                                <div class="chart-bar auto-bar"><span class="chart-value" id="auto-policies">0</span></div>
+                            </div>
+                            <div class="chart-item">
+                                <span class="chart-label">Home Insurance</span>
+                                <div class="chart-bar home-bar"><span class="chart-value" id="home-policies">0</span></div>
+                            </div>
+                            <div class="chart-item">
+                                <span class="chart-label">Life Insurance</span>
+                                <div class="chart-bar life-bar"><span class="chart-value" id="life-policies">0</span></div>
+                            </div>
+                            <div class="chart-item">
+                                <span class="chart-label">Commercial</span>
+                                <div class="chart-bar commercial-bar"><span class="chart-value" id="commercial-policies">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container claims-status">
+                        <h4>Claims Status Overview</h4>
+                        <div class="status-grid">
+                            <div class="status-item submitted">
+                                <span class="status-count" id="submitted-claims">0</span>
+                                <span class="status-label">Submitted</span>
+                            </div>
+                            <div class="status-item under-review">
+                                <span class="status-count" id="review-claims">0</span>
+                                <span class="status-label">Under Review</span>
+                            </div>
+                            <div class="status-item approved">
+                                <span class="status-count" id="approved-claims">0</span>
+                                <span class="status-label">Approved</span>
+                            </div>
+                            <div class="status-item denied">
+                                <span class="status-count" id="denied-claims">0</span>
+                                <span class="status-label">Denied</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section id="customers" class="customers tab-content" data-section="customers" style="display: none;">
+            <h2 data-testid="customers-title">Customer Management</h2>
+            <div class="section-actions">
+                <button class="action-button primary" onclick="loadCustomers()" data-action="load-customers">Load Customers</button>
+                <button class="action-button secondary" onclick="showCustomerForm()" data-action="add-customer">Add Customer</button>
+                <select id="customer-status-filter" data-filter="customer-status" class="filter-dropdown">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+                <select id="customer-type-filter" data-filter="customer-type" class="filter-dropdown">
+                    <option value="">All Types</option>
+                    <option value="individual">Individual</option>
+                    <option value="business">Business</option>
+                    <option value="family">Family</option>
+                </select>
+            </div>
+
+            <!-- Advanced Customer Search -->
+            <div class="advanced-search" id="customer-advanced-search" style="display: none;">
+                <h4>Advanced Customer Search</h4>
+                <div class="search-grid">
+                    <div class="search-group">
+                        <label for="search-customer-number">Customer Number</label>
+                        <input type="text" id="search-customer-number" placeholder="Enter customer number..." data-search="customer-number">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-first-name">First Name</label>
+                        <input type="text" id="search-first-name" placeholder="Enter first name..." data-search="first-name">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-last-name">Last Name</label>
+                        <input type="text" id="search-last-name" placeholder="Enter last name..." data-search="last-name">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-email">Email</label>
+                        <input type="email" id="search-email" placeholder="Enter email..." data-search="email">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-phone">Phone Number</label>
+                        <input type="tel" id="search-phone" placeholder="Enter phone..." data-search="phone">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-agent">Agent</label>
+                        <select id="search-agent" data-search="agent" class="filter-dropdown">
+                            <option value="">All Agents</option>
+                            <!-- Will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label for="search-income-min">Min Income ($)</label>
+                        <input type="number" id="search-income-min" placeholder="0" min="0" step="5000" data-search="income-min">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-income-max">Max Income ($)</label>
+                        <input type="number" id="search-income-max" placeholder="500000" min="0" step="5000" data-search="income-max">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-age-min">Min Age</label>
+                        <input type="number" id="search-age-min" placeholder="18" min="18" max="120" data-search="age-min">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-age-max">Max Age</label>
+                        <input type="number" id="search-age-max" placeholder="80" min="18" max="120" data-search="age-max">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-credit-min">Min Credit Score</label>
+                        <input type="number" id="search-credit-min" placeholder="300" min="300" max="850" data-search="credit-min">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-registration-from">Registration From</label>
+                        <input type="date" id="search-registration-from" data-search="registration-from">
+                    </div>
+                    <div class="search-actions">
+                        <button class="action-button primary" onclick="performAdvancedCustomerSearch()" data-action="advanced-customer-search">Search Customers</button>
+                        <button class="action-button secondary" onclick="clearCustomerSearch()" data-action="clear-customer-search">Clear</button>
+                        <button class="action-button info" onclick="toggleCustomerAdvancedSearch()" data-action="toggle-customer-advanced">Hide Advanced</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Customer Search Toggle -->
+            <div class="simple-search-toggle">
+                <input type="text" id="customer-quick-search" placeholder="Quick search: name, email, phone, customer number..." data-search="customer-quick">
+                <button class="action-button info" onclick="toggleCustomerAdvancedSearch()" data-action="show-customer-advanced">Advanced Search</button>
+            </div>
+        </section>
+
+        <!-- Brokers Section -->
+        <section id="brokers" class="brokers tab-content" data-section="brokers" style="display: none;">
+            <h2 data-testid="brokers-title">Broker Management</h2>
+            <div class="section-actions">
+                <button class="action-button primary" onclick="loadBrokers()" data-action="load-brokers">Load Brokers</button>
+                <button class="action-button secondary" onclick="showBrokerForm()" data-action="add-broker">Add Broker</button>
+                <button class="action-button info" onclick="toggleBrokersAdvancedSearch()" data-action="show-brokers-advanced">Advanced Search</button>
+                <select id="brokers-status-filter" data-filter="broker-status" class="filter-dropdown">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+            </div>
+
+            <!-- Quick Search for Brokers -->
+            <div class="simple-search-toggle">
+                <input type="text" id="brokers-quick-search" placeholder="Quick search brokers by name, company, email, or territory..." data-search="brokers-quick">
+                <button class="action-button secondary" onclick="clearBrokersSearch()" data-action="clear-brokers-search">Clear</button>
+            </div>
+
+            <!-- Advanced Brokers Search -->
+            <div class="advanced-search" id="brokers-advanced-search" style="display: none;">
+                <h4>Advanced Broker Search</h4>
+                <div class="search-grid">
+                    <div class="search-group">
+                        <label for="search-broker-code">Broker Code</label>
+                        <input type="text" id="search-broker-code" placeholder="Enter broker code..." data-search="broker-code">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-first-name">First Name</label>
+                        <input type="text" id="search-broker-first-name" placeholder="Enter first name..." data-search="broker-first-name">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-last-name">Last Name</label>
+                        <input type="text" id="search-broker-last-name" placeholder="Enter last name..." data-search="broker-last-name">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-email">Email</label>
+                        <input type="email" id="search-broker-email" placeholder="Enter email..." data-search="broker-email">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-phone">Phone Number</label>
+                        <input type="tel" id="search-broker-phone" placeholder="Enter phone..." data-search="broker-phone">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-company">Company Name</label>
+                        <input type="text" id="search-broker-company" placeholder="Enter company name..." data-search="broker-company">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-territory">Territory</label>
+                        <input type="text" id="search-broker-territory" placeholder="Enter territory..." data-search="broker-territory">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-broker-specialization">Specialization</label>
+                        <input type="text" id="search-broker-specialization" placeholder="Enter specialization..." data-search="broker-specialization">
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <button class="action-button primary" onclick="performAdvancedBrokersSearch()" data-action="search-brokers">Search Brokers</button>
+                    <button class="action-button secondary" onclick="clearBrokersSearch()" data-action="clear-brokers-search">Clear Filters</button>
+                    <button class="action-button info" onclick="toggleBrokersAdvancedSearch()" data-action="toggle-brokers-advanced">Hide Advanced</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Policies Section -->
+        <section id="policies" class="policies tab-content" data-section="policies" style="display: none;">
+            <h2 data-testid="policies-title">Policy Management</h2>
+            <div class="section-actions">
+                <button class="action-button primary" onclick="loadPolicies()" data-action="load-policies">Load Policies</button>
+                <button class="action-button secondary" onclick="showPolicyForm()" data-action="create-policy">Create Policy</button>
+                <button class="action-button info" onclick="toggleWorkflowGuide()" data-action="toggle-workflow">Show Workflow Guide</button>
+                <select id="policy-filter" data-filter="policy-type" class="filter-dropdown">
+                    <option value="">All Policy Types</option>
+                    <option value="auto">Auto Insurance</option>
+                    <option value="home">Home Insurance</option>
+                    <option value="life">Life Insurance</option>
+                    <option value="renters">Renters Insurance</option>
+                </select>
+                <select id="policy-status-filter" data-filter="policy-status" class="filter-dropdown">
+                    <option value="">All Statuses</option>
+                    <option value="submission">Submission</option>
+                    <option value="quoted">Quoted</option>
+                    <option value="booked">Booked</option>
+                    <option value="declined">Declined</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="expired">Expired</option>
+                </select>
+            </div>
+
+            <!-- Advanced Policy Search -->
+            <div class="advanced-search" id="policy-advanced-search" style="display: none;">
+                <h4>Advanced Policy Search</h4>
+                <div class="search-grid">
+                    <div class="search-group">
+                        <label for="search-policy-number">Policy Number</label>
+                        <input type="text" id="search-policy-number" placeholder="Enter policy number..." data-search="policy-number">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-customer-name">Customer Name</label>
+                        <input type="text" id="search-customer-name" placeholder="Enter customer name..." data-search="customer-name">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-product-name">Product Name</label>
+                        <input type="text" id="search-product-name" placeholder="Enter product name..." data-search="product-name">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-date-from">Start Date From</label>
+                        <input type="date" id="search-date-from" data-search="date-from">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-date-to">Start Date To</label>
+                        <input type="date" id="search-date-to" data-search="date-to">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-coverage-min">Min Coverage ($)</label>
+                        <input type="number" id="search-coverage-min" placeholder="0" min="0" step="1000" data-search="coverage-min">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-coverage-max">Max Coverage ($)</label>
+                        <input type="number" id="search-coverage-max" placeholder="1000000" min="0" step="1000" data-search="coverage-max">
+                    </div>
+                    <div class="search-actions">
+                        <button class="action-button primary" onclick="performAdvancedPolicySearch()" data-action="advanced-search">Search Policies</button>
+                        <button class="action-button secondary" onclick="clearPolicySearch()" data-action="clear-search">Clear</button>
+                        <button class="action-button info" onclick="toggleAdvancedSearch()" data-action="toggle-advanced">Hide Advanced</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Search Toggle -->
+            <div class="simple-search-toggle">
+                <input type="text" id="policy-quick-search" placeholder="Quick search: policy number, customer name, product..." data-search="quick">
+                <button class="action-button info" onclick="toggleAdvancedSearch()" data-action="show-advanced">Advanced Search</button>
+            </div>
+
+            <!-- Policy Status Workflow Guide -->
+            <div class="workflow-guide" id="policy-workflow-guide" style="display: none;">
+                <h4>Policy Status Workflow</h4>
+                <div class="workflow-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-name">Submission</span>
+                        <span class="step-desc">Initial policy submission</span>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-name">Quoted</span>
+                        <span class="step-desc">Quote generated and sent</span>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-name">Booked</span>
+                        <span class="step-desc">Policy accepted and active</span>
+                    </div>
+                    <div class="step-decline">
+                        <div class="step-arrow decline">↘</div>
+                        <div class="step declined">
+                            <span class="step-number">X</span>
+                            <span class="step-name">Declined</span>
+                            <span class="step-desc">Policy rejected</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Claims Section -->
+        <section id="claims" class="claims tab-content" data-section="claims" style="display: none;">
+            <h2 data-testid="claims-title">Claims Management</h2>
+            <div class="section-actions">
+                <button class="action-button primary" onclick="loadClaims()" data-action="load-claims">Load Claims</button>
+                <button class="action-button warning" onclick="showClaimForm()" data-action="submit-claim">Submit New Claim</button>
+                <button class="action-button info" onclick="toggleClaimsAdvancedSearch()" data-action="show-claims-advanced">Advanced Search</button>
+                <select id="claims-status-filter" data-filter="status" class="filter-dropdown">
+                    <option value="">All Statuses</option>
+                    <option value="submitted">Submitted</option>
+                    <option value="under_review">Under Review</option>
+                    <option value="approved">Approved</option>
+                    <option value="paid">Paid</option>
+                    <option value="denied">Denied</option>
+                </select>
+            </div>
+
+            <!-- Quick Search for Claims -->
+            <div class="simple-search-toggle">
+                <input type="text" id="claims-quick-search" placeholder="Quick search claims by number, customer, or description..." data-search="claims-quick">
+                <button class="action-button secondary" onclick="clearClaimsSearch()" data-action="clear-claims-search">Clear</button>
+            </div>
+
+            <!-- Advanced Claims Search -->
+            <div class="advanced-search" id="claims-advanced-search" style="display: none;">
+                <h4>Advanced Claims Search</h4>
+                <div class="search-grid">
+                    <div class="search-group">
+                        <label for="search-claim-number">Claim Number</label>
+                        <input type="text" id="search-claim-number" placeholder="Enter claim number..." data-search="claim-number">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-claim-customer">Customer Name</label>
+                        <input type="text" id="search-claim-customer" placeholder="Enter customer name..." data-search="claim-customer">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-claim-type">Claim Type</label>
+                        <select id="search-claim-type" data-search="claim-type" class="filter-dropdown">
+                            <option value="">All Types</option>
+                            <option value="accident">Accident</option>
+                            <option value="theft">Theft</option>
+                            <option value="fire">Fire</option>
+                            <option value="water_damage">Water Damage</option>
+                            <option value="vandalism">Vandalism</option>
+                            <option value="natural_disaster">Natural Disaster</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label for="search-claim-date-from">Incident Date From</label>
+                        <input type="date" id="search-claim-date-from" data-search="claim-date-from">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-claim-date-to">Incident Date To</label>
+                        <input type="date" id="search-claim-date-to" data-search="claim-date-to">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-claim-amount-min">Min Claim Amount ($)</label>
+                        <input type="number" id="search-claim-amount-min" placeholder="0" min="0" step="100" data-search="claim-amount-min">
+                    </div>
+                    <div class="search-group">
+                        <label for="search-claim-amount-max">Max Claim Amount ($)</label>
+                        <input type="number" id="search-claim-amount-max" placeholder="1000000" min="0" step="100" data-search="claim-amount-max">
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <button class="action-button primary" onclick="performAdvancedClaimsSearch()" data-action="search-claims">Search Claims</button>
+                    <button class="action-button secondary" onclick="clearClaimsSearch()" data-action="clear-claims-search">Clear Filters</button>
+                    <button class="action-button info" onclick="toggleClaimsAdvancedSearch()" data-action="toggle-claims-advanced">Hide Advanced</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quote Calculator Section -->
+        <section id="quotes" class="quotes tab-content" data-section="quotes" style="display: none;">
+            <h2 data-testid="quotes-title">Insurance Quote Calculator</h2>
+            <div class="section-actions">
+                <button class="action-button info" onclick="clearQuoteForm()" data-action="clear-quote">Clear Form</button>
+            </div>
+
+            <div class="quote-form">
+                <div class="form-container">
+                    <h3>Get Your Insurance Quote</h3>
+                    <p class="form-description">Fill out the information below to receive an instant insurance quote</p>
+
+                    <form id="quote-calculator" data-form="quote" class="modal-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quote-policy-type">Insurance Type *</label>
+                                <select id="quote-policy-type" required data-field="policy-type" class="form-input">
+                                    <option value="">Select Insurance Type</option>
+                                    <option value="auto">Auto Insurance</option>
+                                    <option value="home">Home Insurance</option>
+                                    <option value="life">Life Insurance</option>
+                                    <option value="renters">Renters Insurance</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quote-coverage">Coverage Amount *</label>
+                                <input type="number" id="quote-coverage" placeholder="e.g., 100000" required data-field="coverage-amount" class="form-input" min="1000" step="1000">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quote-age">Your Age</label>
+                                <input type="number" id="quote-age" placeholder="e.g., 30" data-field="customer-age" class="form-input" min="16" max="120">
+                            </div>
+                            <div class="form-group">
+                                <label for="quote-zip">ZIP Code</label>
+                                <input type="text" id="quote-zip" placeholder="e.g., 12345" data-field="zip-code" class="form-input" pattern="[0-9]{5}">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="action-button primary" data-action="calculate-quote">Calculate Quote</button>
+                            <button type="button" class="action-button secondary" onclick="clearQuoteForm()" data-action="clear-quote-form">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="quote-result" class="quote-result" style="display: none;"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer" data-section="footer">
+        <div class="footer-content">
+            <p class="footer-text">🏢 CECG Testing Portal - Comprehensive Testing Environment</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link" data-link="support">Support</a>
+                <a href="#" class="footer-link" data-link="privacy">Privacy Policy</a>
+                <a href="#" class="footer-link" data-link="terms">Terms of Service</a>
+            </div>
+            <div class="footer-stats" data-component="stats">
+                <span class="stat" data-stat="customers">Active Customers: <span id="customer-counter" data-value="0">0</span></span>
+                <span class="stat" data-stat="policies">Active Policies: <span id="policy-counter" data-value="0">0</span></span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Overlays -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-content" class="modal-content">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Data Display Modal -->
+    <div id="data-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container large">
+            <div class="modal-header">
+                <h3 id="data-modal-title">Data</h3>
+                <button class="modal-close" onclick="closeDataModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="data-controls">
+                    <input type="text" id="data-search" placeholder="Search..." class="search-input">
+                    <button class="export-btn" onclick="exportDisplayedData()">Export</button>
+                </div>
+                <div id="data-modal-content" class="data-display-area">
+                    <!-- Data tables will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Form Templates -->
+    <div style="display: none;">
+        <!-- Login Form Template -->
+        <div id="login-form-template">
+            <h3 class="modal-title">Customer Login</h3>
+            <form id="customer-login-form" class="modal-form">
+                <div class="form-group">
+                    <label for="modal-login-email">Email Address</label>
+                    <input type="email" id="modal-login-email" name="email" placeholder="Enter your email" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="modal-login-password">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="modal-login-password" name="password" placeholder="Enter your password" required class="form-input">
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('modal-login-password')" aria-label="Show password">👁️</button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Customer Registration Form Template -->
+        <div id="customer-form-template">
+            <h3 class="modal-title">Customer Registration</h3>
+            <form id="create-customer-form" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customer-email">Email Address</label>
+                        <input type="email" id="customer-email" name="email" placeholder="your@email.com" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-password">Password</label>
+                        <div class="password-input-container">
+                            <input type="password" id="customer-password" name="password" placeholder="Choose a password" required class="form-input">
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('customer-password')" aria-label="Show password">👁️</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="first_name" placeholder="First name" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="last_name" placeholder="Last name" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date-of-birth">Date of Birth</label>
+                        <input type="date" id="date-of-birth" name="date_of_birth" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" class="form-input">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Claim Submission Form Template -->
+        <div id="claim-form-template">
+            <h3 class="modal-title">Submit Insurance Claim</h3>
+            <form id="submit-claim-form" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="claim-policy">Select Policy</label>
+                        <select id="claim-policy" name="policy_id" required class="form-input">
+                            <option value="">Choose a policy...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="claim-type">Claim Type</label>
+                        <select id="claim-type" name="claim_type" required class="form-input">
+                            <option value="">Select claim type...</option>
+                            <option value="auto_accident">Auto Accident</option>
+                            <option value="theft">Theft</option>
+                            <option value="vandalism">Vandalism</option>
+                            <option value="water_damage">Water Damage</option>
+                            <option value="fire_damage">Fire Damage</option>
+                            <option value="storm_damage">Storm Damage</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="incident-date">Incident Date</label>
+                        <input type="date" id="incident-date" name="incident_date" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="claim-amount">Estimated Claim Amount</label>
+                        <input type="number" id="claim-amount" name="claim_amount" placeholder="0.00" step="0.01" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="claim-description">Incident Description</label>
+                    <textarea id="claim-description" name="description" placeholder="Please describe what happened in detail..." required class="form-input" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="incident-location">Location of Incident</label>
+                    <input type="text" id="incident-location" name="incident_location" placeholder="Street address or general location" class="form-input">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Claim</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Policy Creation Form Template -->
+        <div id="policy-form-template">
+            <h3 class="modal-title">Create New Policy</h3>
+            <form id="create-policy-form" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="policy-customer">Customer *</label>
+                        <select id="policy-customer" name="customer_id" required class="form-input">
+                            <option value="">Select customer...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="policy-broker">Broker *</label>
+                        <select id="policy-broker" name="broker_id" required class="form-input">
+                            <option value="">Select broker...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="policy-type">Policy Type *</label>
+                        <select id="policy-type" name="policy_type" required class="form-input">
+                            <option value="">Select type...</option>
+                            <option value="auto">Auto Insurance</option>
+                            <option value="home">Home Insurance</option>
+                            <option value="life">Life Insurance</option>
+                            <option value="renters">Renters Insurance</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="coverage-amount">Coverage Amount</label>
+                        <input type="number" id="coverage-amount" name="coverage_amount" placeholder="100000" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="premium-amount">Annual Premium</label>
+                        <input type="number" id="premium-amount" name="premium_amount" placeholder="1200" step="0.01" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Policy</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Customer Edit Form Template -->
+        <div id="edit-customer-form-template">
+            <h3 class="modal-title">Edit Customer</h3>
+            <form id="edit-customer-form" class="modal-form">
+                <input type="hidden" id="edit-customer-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-customer-email">Email Address</label>
+                        <input type="email" id="edit-customer-email" name="email" placeholder="your@email.com" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-customer-password">Password</label>
+                        <div class="password-input-container">
+                            <input type="password" id="edit-customer-password" name="password" placeholder="Leave blank to keep current" class="form-input">
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('edit-customer-password')" aria-label="Show password">👁️</button>
+                        </div>
+                        <small class="form-hint">Leave blank to keep current password</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-first-name">First Name</label>
+                        <input type="text" id="edit-first-name" name="first_name" placeholder="First name" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-last-name">Last Name</label>
+                        <input type="text" id="edit-last-name" name="last_name" placeholder="Last name" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-date-of-birth">Date of Birth</label>
+                        <input type="date" id="edit-date-of-birth" name="date_of_birth" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-phone">Phone Number</label>
+                        <input type="tel" id="edit-phone" name="phone" placeholder="(555) 123-4567" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-address">Address</label>
+                        <input type="text" id="edit-address" name="address" placeholder="Street address" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-city">City</label>
+                        <input type="text" id="edit-city" name="city" placeholder="City" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-state">State</label>
+                        <input type="text" id="edit-state" name="state" placeholder="State" maxlength="2" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-zip-code">ZIP Code</label>
+                        <input type="text" id="edit-zip-code" name="zip_code" placeholder="ZIP Code" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-employment-status">Employment Status</label>
+                        <select id="edit-employment-status" name="employment_status" class="form-input">
+                            <option value="">Select status...</option>
+                            <option value="employed">Employed</option>
+                            <option value="self-employed">Self-Employed</option>
+                            <option value="unemployed">Unemployed</option>
+                            <option value="retired">Retired</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-annual-income">Annual Income</label>
+                        <input type="number" id="edit-annual-income" name="annual_income" placeholder="Annual income" class="form-input">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Customer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Broker Registration Form Template -->
+        <div id="broker-form-template">
+            <h3 class="modal-title">Broker Registration</h3>
+            <form id="create-broker-form" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="broker-first-name">First Name *</label>
+                        <input type="text" id="broker-first-name" name="first_name" placeholder="First name" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="broker-last-name">Last Name *</label>
+                        <input type="text" id="broker-last-name" name="last_name" placeholder="Last name" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="broker-email">Email Address *</label>
+                        <input type="email" id="broker-email" name="email" placeholder="broker@company.com" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="broker-phone">Phone Number</label>
+                        <input type="tel" id="broker-phone" name="phone" placeholder="(555) 123-4567" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="broker-company">Company Name *</label>
+                        <input type="text" id="broker-company" name="company_name" placeholder="Company Name" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="broker-license">License Number</label>
+                        <input type="text" id="broker-license" name="license_number" placeholder="License Number" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="broker-territory">Territory</label>
+                        <input type="text" id="broker-territory" name="territory" placeholder="Northeast, West Coast, etc." class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="broker-specialization">Specialization</label>
+                        <input type="text" id="broker-specialization" name="specialization" placeholder="Commercial & Personal Lines" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="broker-commission">Commission Rate (%)</label>
+                        <input type="number" id="broker-commission" name="commission_rate" placeholder="5.0" step="0.01" min="0" max="100" class="form-input">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="action-button primary">Register Broker</button>
+                    <button type="button" class="action-button secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Broker Edit Form Template -->
+        <div id="edit-broker-form-template">
+            <h3 class="modal-title">Edit Broker</h3>
+            <form id="edit-broker-form" class="modal-form">
+                <input type="hidden" id="edit-broker-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-broker-first-name">First Name *</label>
+                        <input type="text" id="edit-broker-first-name" name="first_name" placeholder="First name" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-broker-last-name">Last Name *</label>
+                        <input type="text" id="edit-broker-last-name" name="last_name" placeholder="Last name" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-broker-email">Email Address *</label>
+                        <input type="email" id="edit-broker-email" name="email" placeholder="broker@company.com" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-broker-phone">Phone Number</label>
+                        <input type="tel" id="edit-broker-phone" name="phone" placeholder="(555) 123-4567" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-broker-company">Company Name *</label>
+                        <input type="text" id="edit-broker-company" name="company_name" placeholder="Company Name" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-broker-license">License Number</label>
+                        <input type="text" id="edit-broker-license" name="license_number" placeholder="License Number" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-broker-territory">Territory</label>
+                        <input type="text" id="edit-broker-territory" name="territory" placeholder="Northeast, West Coast, etc." class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-broker-specialization">Specialization</label>
+                        <input type="text" id="edit-broker-specialization" name="specialization" placeholder="Commercial & Personal Lines" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-broker-commission">Commission Rate (%)</label>
+                        <input type="number" id="edit-broker-commission" name="commission_rate" placeholder="5.0" step="0.01" min="0" max="100" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-broker-status">Status</label>
+                        <select id="edit-broker-status" name="status" class="form-input">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="action-button primary">Update Broker</button>
+                    <button type="button" class="action-button secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div> <!-- End main-app -->
+
+    <script src="app.js"></script>
+</body>
+</html>

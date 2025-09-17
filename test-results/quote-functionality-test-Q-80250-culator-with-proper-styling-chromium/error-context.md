@@ -1,0 +1,80 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - heading "🏢 Chubb Insurance Portal" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Comprehensive Insurance Management System
+      - generic [ref=e7]:
+        - generic [ref=e8]: Welcome, Wizard McSpellcaster
+        - button "Logout" [ref=e9] [cursor=pointer]
+        - button "🔄 Reset Data" [ref=e10] [cursor=pointer]
+  - navigation "Main navigation" [ref=e11]:
+    - list [ref=e12]:
+      - listitem [ref=e13]:
+        - link "Dashboard" [ref=e14] [cursor=pointer]:
+          - /url: "#dashboard"
+      - listitem [ref=e15]:
+        - link "Customers" [ref=e16] [cursor=pointer]:
+          - /url: "#customers"
+      - listitem [ref=e17]:
+        - link "Brokers" [ref=e18] [cursor=pointer]:
+          - /url: "#brokers"
+      - listitem [ref=e19]:
+        - link "Policies" [ref=e20] [cursor=pointer]:
+          - /url: "#policies"
+      - listitem [ref=e21]:
+        - link "Claims" [ref=e22] [cursor=pointer]:
+          - /url: "#claims"
+      - listitem [ref=e23]:
+        - link "Get Quote" [active] [ref=e24] [cursor=pointer]:
+          - /url: "#quotes"
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - heading "Insurance Quote Calculator" [level=2] [ref=e27]
+      - button "Clear Form" [ref=e29] [cursor=pointer]
+      - generic [ref=e31]:
+        - heading "Get Your Insurance Quote" [level=3] [ref=e32]
+        - paragraph [ref=e33]: Fill out the information below to receive an instant insurance quote
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - generic [ref=e37]: Insurance Type *
+              - combobox "Insurance Type *" [ref=e38] [cursor=pointer]:
+                - option "Select Insurance Type" [selected]
+                - option "Auto Insurance"
+                - option "Home Insurance"
+                - option "Life Insurance"
+                - option "Renters Insurance"
+            - generic [ref=e39]:
+              - generic [ref=e40]: Coverage Amount *
+              - spinbutton "Coverage Amount *" [ref=e41]
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - generic [ref=e44]: Your Age
+              - spinbutton "Your Age" [ref=e45]
+            - generic [ref=e46]:
+              - generic [ref=e47]: ZIP Code
+              - textbox "ZIP Code" [ref=e48]
+          - generic [ref=e49]:
+            - button "Calculate Quote" [ref=e50] [cursor=pointer]
+            - button "Clear Form" [ref=e51] [cursor=pointer]
+  - contentinfo [ref=e52]:
+    - generic [ref=e53]:
+      - paragraph [ref=e54]: 🏢 Chubb Insurance Portal - Comprehensive Coverage Solutions
+      - generic [ref=e55]:
+        - link "Support" [ref=e56] [cursor=pointer]:
+          - /url: "#"
+        - link "Privacy Policy" [ref=e57] [cursor=pointer]:
+          - /url: "#"
+        - link "Terms of Service" [ref=e58] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - text: "Active Customers:"
+          - generic [ref=e61]: "1"
+        - generic [ref=e62]:
+          - text: "Active Policies:"
+          - generic [ref=e63]: "0"
+```
