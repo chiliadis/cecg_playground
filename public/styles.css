@@ -956,6 +956,18 @@ h2 {
     .endpoint-selector {
         grid-template-columns: 1fr;
     }
+
+    .dashboard-charts {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ========================================

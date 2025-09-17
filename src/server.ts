@@ -41,14 +41,16 @@ async function startServer() {
     app.listen(PORT, () => {
       console.log(`Testing playground server running on http://localhost:${PORT}`);
       console.log('');
-      console.log('🧪 Testing Playground Features:');
-      console.log('• User Management - Create, login, and manage users');
-      console.log('• Product Catalog - Browse and search products');
-      console.log('• Order Processing - Create and track orders');
+      console.log('🧪 CECG Testing Playground Features:');
+      console.log('• Customer Management - Create, manage, and search customers');
+      console.log('• Broker Management - Manage insurance brokers and specializations');
+      console.log('• Policy Management - Create and track insurance policies');
+      console.log('• Claims Processing - Submit and process insurance claims');
+      console.log('• Quote Calculator - Calculate insurance quotes with risk assessment');
       console.log('• API Testing - Test all endpoints and error scenarios');
       console.log('');
-      console.log('Visit http://localhost:${PORT} to start testing!');
-      console.log('CECG CHUBB Quality Engineering')
+      console.log(`Visit http://localhost:${PORT} to start testing!`);
+      console.log('CECG Quality Engineering Testing Portal')
     });
   } catch (error) {
     console.error('Failed to start server:', error);
